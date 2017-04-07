@@ -1,3 +1,5 @@
 require('softap')
+require('server')
 
-startSoftAP()
+softap:start()
+server:start()

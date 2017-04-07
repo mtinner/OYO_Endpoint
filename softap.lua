@@ -1,4 +1,6 @@
-function startSoftAP()
+softap = {}
+
+function softap.start()
     wifi.setmode(wifi.SOFTAP)
 
     local cfg
