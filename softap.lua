@@ -13,12 +13,12 @@ function softap.start()
     wifi.ap.setip(cfg)
 
     cfg = {
-        ssid = "ESP OYO" .. node.chipid()
+        ssid = "OYO" .. node.chipid()
     }
     wifi.ap.config(cfg)
 
     print("\r\n********************")
-    print("ESP IP:\r\n", wifi.ap.getip())
+    print("OYO IP:\r\n", wifi.ap.getip())
 
     cfg = nil
 end

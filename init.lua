@@ -1,5 +1,9 @@
 require('softap')
 require('server')
+require('station')
 
-softap:start()
-server:start()
+if not station:start() then
+    print('Could not connect')
+    softap:start()
+    server:start()
+end
