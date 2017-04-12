@@ -21,6 +21,7 @@ function routes.manage(self, conn, method, path, params)
             file.write(cjson.encode(params))
             file.close()
             sendFile(conn, "/connecting")
+            node.restart()
         end
     else
         print("[File " .. path .. " not found]");

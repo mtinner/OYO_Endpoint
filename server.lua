@@ -47,6 +47,3 @@ function server.start()
         end)
     end)
 end
-
-function checkRoutes()
-end
