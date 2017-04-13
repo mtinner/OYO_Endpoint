@@ -19,6 +19,5 @@ function softap.start()
 
     print("\r\n********************")
     print("OYO IP:\r\n", wifi.ap.getip())
-
     cfg = nil
 end

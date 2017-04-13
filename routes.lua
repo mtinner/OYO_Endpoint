@@ -3,12 +3,10 @@ routes = {}
 local httpRequest = {}
 httpRequest["/"] = "index.html";
 httpRequest["/index.html"] = "index.html";
-httpRequest["/connecting"] = "connecting.html";
 
 local getContentType = {};
 getContentType["/"] = "text/html";
 getContentType["/index.htm"] = "text/html";
-getContentType["/connecting"] = "text/html";
 
 
 function routes.manage(self, conn, method, path, params)
@@ -17,10 +15,9 @@ function routes.manage(self, conn, method, path, params)
         sendFile(conn, path)
     elseif path == "/" and method == 'POST' then
         print(params.ssid .. params.pwd)
-        if params.ssid and params.pwd and file.open("wifi.json", "w") then
-            file.write(cjson.encode(params))
+        if params.ssid and params.pwd and file.open("wifi.json", "w+") then
+            file.writeline(cjson.encode(params))
             file.close()
-            sendFile(conn, "/connecting")
             node.restart()
         end
     else

@@ -7,3 +7,21 @@ function helper.getParams(self, request)
     end
     return params
 end
+
+
+function helper.getWifiConfig()
+    if file.open("wifi.json", "r") then
+        local wificonfig
+        local line = file.readline()
+        file.close()
+        wificonfig = cjson.decode(line)
+
+        if not wificonfig or not wificonfig.ssid or not wificonfig.pwd then
+            return nil
+        end
+
+        wificonfig.auto = false
+        return wificonfig
+    end
+    return nil
+end

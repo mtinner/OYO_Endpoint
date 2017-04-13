@@ -1,13 +1,10 @@
-require('helper')
-require('routes')
-
 server = {}
 
 local filePos = 0;
 
 
 function server.start()
-    if srv then srv:close() srv = nil end
+
     srv = net.createServer(net.TCP)
     srv:listen(80, function(conn)
         conn:on("receive", function(conn, request)

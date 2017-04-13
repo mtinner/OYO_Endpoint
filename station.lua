@@ -21,7 +21,6 @@ function station.start(self, wifiConfig, failureCallback)
                 print(i)
                 print(c) 
                 srv:close()
-                print(getWifiConfig().ssid)
             end)
             
             srv:listen(1990)
