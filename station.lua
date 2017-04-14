@@ -21,6 +21,7 @@ function station.start(self, wifiConfig)
                     print(i)
                     print(c)
                     srv:close()
+                    server:start()
                 end)
 
                 srv:listen(1990)

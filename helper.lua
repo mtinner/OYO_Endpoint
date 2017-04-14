@@ -25,3 +25,12 @@ function helper.getWifiConfig()
     end
     return nil
 end
+
+function helper.hasArrayValue(self, arr, value)
+    for i, v in ipairs(arr) do
+        if v == value then
+            return true
+        end
+    end
+    return false
+end

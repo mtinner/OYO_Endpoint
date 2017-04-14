@@ -3,6 +3,8 @@ require('server')
 require('station')
 require('helper')
 require('routes')
+require('input')
+require('output')
 
 function startStation(wifiConfig)
     station:start(wifiConfig)
@@ -16,6 +18,8 @@ end
 
 
 local wifiConfig = helper:getWifiConfig()
+input:initialize()
+output:initialize()
 
 if wifiConfig then
     local config = wifiConfig
