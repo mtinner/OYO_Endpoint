@@ -10,8 +10,8 @@ function output.initialize()
 end
 
 
-function setOutput(pin, value)
-    if helper:hasArrayValue(output, pin) and (value == gpio.LOW or value == gpio.HIGH) then
+function output.setOutput(pin, value)
+    if helper.hasArrayValue(outputs, pin) and (value == gpio.LOW or value == gpio.HIGH) then
         gpio.write(pin, value)
     end
 end
