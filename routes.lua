@@ -4,9 +4,6 @@ local httpRequest = {}
 httpRequest["/"] = "index.html";
 httpRequest["/index.html"] = "index.html";
 
-local getContentType = {};
-getContentType["/"] = "text/html";
-getContentType["/index.htm"] = "text/html";
 
 function routes.manage(self, conn, method, route, params)
     if method == 'GET' then
@@ -30,11 +27,11 @@ function sendFile(conn, path)
     print(path)
     requestFile = httpRequest[path];
     print("[Sending file " .. requestFile .. "]");
-    conn:send("HTTP/1.1 200 OK\r\nContent-Type: " .. getContentType[path] .. "\r\n\r\n");
+    conn:send("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n");
 end
 
 function sendJson(conn, path)
     -- requestFile = httpRequest[path];
-    conn:send("HTTP/1.1 204 No Content\r\nContent-Type: " .. getContentType[path] .. "\r\n\r\n");
+    conn:send("HTTP/1.1 204 No Content\r\nContent-Type: application/json\r\n\r\n");
 end
 
