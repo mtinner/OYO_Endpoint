@@ -36,3 +36,11 @@ function station.start(self, wifiConfig)
     end)
     return nil
 end
+
+function station.saveCredentials(self, params)
+    if params.ssid and params.pwd and file.open("wifi.json", "w+") then
+        file.writeline(cjson.encode(params))
+        file.close()
+        node.restart()
+    end
+end

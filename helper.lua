@@ -26,7 +26,7 @@ function helper.getWifiConfig()
     return nil
 end
 
-function helper.hasArrayValue(self, arr, value)
+function helper.hasArrayValue(arr, value)
     for i, v in ipairs(arr) do
         if v == value then
             return true

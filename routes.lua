@@ -3,35 +3,38 @@ routes = {}
 local httpRequest = {}
 httpRequest["/"] = "index.html";
 httpRequest["/index.html"] = "index.html";
-httpRequest["/connecting"] = "connecting.html";
 
 local getContentType = {};
 getContentType["/"] = "text/html";
 getContentType["/index.htm"] = "text/html";
-getContentType["/connecting"] = "text/html";
 
-
-function routes.manage(self, conn, method, path, params)
-
-    if getContentType[path] and method == 'GET' then
-        sendFile(conn, path)
-    elseif path == "/" and method == 'POST' then
-        print(params.ssid .. params.pwd)
-        if params.ssid and params.pwd and file.open("wifi.json", "w+") then
-            file.writeline(cjson.encode(params))
-            file.close()
-            sendFile(conn, "/connecting")
-            node.restart()
+function routes.manage(self, conn, method, route, params)
+    if method == 'GET' then
+        if route == '/' or route == '/index.html' then
+            sendFile(conn, route)
+        end
+    elseif method == 'POST' then
+        if (route == '/' or route == '/index.html') and params then
+            station:saveCredentials(params)
+        elseif route == '/output' then
+            print(route)
         end
     else
-        print("[File " .. path .. " not found]");
+        print("[ " .. method .. " not found]");
         conn:send("HTTP/1.1 404 Not Found\r\n\r\n")
         conn:close();
     end
 end
 
 function sendFile(conn, path)
+    print(path)
     requestFile = httpRequest[path];
     print("[Sending file " .. requestFile .. "]");
     conn:send("HTTP/1.1 200 OK\r\nContent-Type: " .. getContentType[path] .. "\r\n\r\n");
 end
+
+function sendJson(conn, path)
+    -- requestFile = httpRequest[path];
+    conn:send("HTTP/1.1 204 No Content\r\nContent-Type: " .. getContentType[path] .. "\r\n\r\n");
+end
+
