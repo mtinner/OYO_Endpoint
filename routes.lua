@@ -1,16 +1,21 @@
 routes = {}
 
-function routes.manage(_, conn, method, route, params)
+function routes.manage(_, conn, method, route, params, body)
     if method == 'GET' then
         if route == '/' or route == '/index.html' then
             sendFile(conn)
         end
     elseif method == 'POST' then
         if (route == '/' or route == '/index.html') and params then
-            station.saveCredentials(params)
+            if not station.saveCredentials(params) then
+                sendFile(conn)
+            end
         elseif route == '/output' then
             print(route)
-            output.setOutput(2, 1)
+            if body.value and body.pin then
+                output.setOutput(body.pin, body.value)
+                sendJson(conn)
+            end
         end
     else
         print("[ " .. method .. " not found]");

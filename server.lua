@@ -14,9 +14,9 @@ function server.start()
                 _, _, method, path = string.find(request, "([A-Z]+) (.+) HTTP");
             end
 
-            local params = helper:getParams(request)
-
-            routes:manage(conn, method, path, params)
+            local params = helper.getParams(request)
+            local body = helper.getJson(request)
+            routes:manage(conn, method, path, params, body)
             filePos = 0
         end)
 

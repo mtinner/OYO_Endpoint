@@ -1,11 +1,17 @@
 helper = {}
 
-function helper.getParams(self, request)
+function helper.getParams(request)
     params = {}
     for k, v in string.gmatch(request, "[\n|&]([^&=\n ;]+)=([^=;\n&]+)") do
         params[k] = v
     end
     return params
+end
+
+function helper.getJson(request)
+    print(request)
+    local jsonString = string.match(request, "{.*}$")
+    return cjson.decode(jsonString)
 end
 
 
