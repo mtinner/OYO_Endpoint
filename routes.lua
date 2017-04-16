@@ -13,7 +13,7 @@ function routes.manage(_, conn, method, route, params, body)
         elseif route == '/output' then
             print(route)
             if body.value and body.pin then
-                output.setOutput(body.pin, body.value)
+                output.setOutput(body.pin, body.value, body.toggle)
                 sendJson(conn)
             end
         end
