@@ -11,6 +11,9 @@ end
 function helper.getJson(request)
     print(request)
     local jsonString = string.match(request, "{.*}$")
+    if not jsonString then
+        jsonString='{}'
+    end
     return cjson.decode(jsonString)
 end
 

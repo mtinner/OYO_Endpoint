@@ -5,6 +5,7 @@ require('helper')
 require('routes')
 require('input')
 require('output')
+require('socket')
 
 function startStation(wifiConfig)
     station:start(wifiConfig)
