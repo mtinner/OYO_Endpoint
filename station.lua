@@ -8,7 +8,7 @@ function station.start(self, wifiConfig)
     wifi.sta.connect()
 
     local cnt = 0
-    tmr.alarm(0, 2000, 1, function()
+    tmr.alarm(0, 2000, tmr.ALARM_AUTO, function()
         if (wifi.sta.getip() == nil) and (cnt < 20) then
             print("Trying Connect to Router, Waiting...")
             cnt = cnt + 1
@@ -18,13 +18,16 @@ function station.start(self, wifiConfig)
                 print("Config done, IP is " .. wifi.sta.getip())
                 server:start()
                 srv = net.createServer(net.UDP)
-                srv:on("receive", function(s, c, p, i)
-                    print(i)
-                    print(c)
-                    socket.connect(i)
+                srv:on("receive", function(_, _, _, ip)
+                    tmr.unregister(1)
+                    socket.connect(ip)
                     srv:close()
                 end)
-
+                tmr.alarm(1, 120000, tmr.ALARM_SINGLE, function()
+                    print("No broadcast message received within 120s")
+                    srv:close()
+                    startConfigAP()
+                end)
                 srv:listen(1990)
             else
                 print("Wifi setup time more than 40s.")
