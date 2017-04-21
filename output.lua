@@ -1,6 +1,6 @@
 output = {}
 
-local outputs = { 0, 2, 6, 8 }
+local outputs ={ 0, 2, 6, 8 }
 
 function output.initialize()
     for i, pin in ipairs(outputs) do

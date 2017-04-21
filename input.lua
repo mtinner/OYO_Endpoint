@@ -1,23 +1,33 @@
 input = {}
 
-local inputs = { 1, 3, 5, 7 }
+local inputs = { [1] = 1, [3] = 1, [5] = 1, [7] = 1 }
+local subscriber = { notify = nil }
 
 function input.initialize()
-    for i, pin in ipairs(inputs) do
-        gpio.mode(pin, gpio.INPUT, gpio.PULLUP)
+    for pin, level in pairs(inputs) do
+        gpio.mode(pin, gpio.INPUT, level)
         gpio.trig(pin, 'none')
-        gpio.trig(pin, 'both', pinTrig(pin))
-        --gpio.trig(pin, 'down', pinTrig(pin))
+        detectChanges()
     end
 end
 
-function pinTrig(pin)
-    local affectedPin = pin
-    return function(level, when)
-        print('trig')
-        print(affectedPin)
-        print(level)
-        local obj = { pin = pin, level = level }
-        socket.send(obj)
-    end
+function detectChanges()
+    tmr.alarm(6, 500, tmr.ALARM_AUTO, function()
+        for pin, level in pairs(inputs) do
+            if inputs[pin] ~= gpio.read(pin) then
+                inputs[pin] = gpio.read(pin)
+                if subscriber.notify then
+                    subscriber.notify({ pin = pin, level = level })
+                end
+            end
+        end
+    end)
+end
+
+function input.subscribe(callback)
+    subscriber.notify = callback
+end
+
+function input.unsubscribe()
+    subscriber.notify = nil
 end
