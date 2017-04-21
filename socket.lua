@@ -4,7 +4,13 @@ socket.ws = nil
 function socket.connect(ip)
     socket.ws = websocket.createClient()
     socket.ws:on("connection", function(ws)
-        socket.ws:send('{"chipId":' .. node.chipid() .. '}')
+        local initialPayload = {
+            chipId = node.chipid(),
+            inputPins = input.pins,
+            outputPins = output.pins
+        }
+
+        socket.ws:send(cjson.encode(initialPayload))
         print('got ws connection')
         tmr.unregister(3)
         input.subscribe(socket.send)

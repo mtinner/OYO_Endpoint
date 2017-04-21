@@ -1,12 +1,12 @@
 input = {}
+input.pins = { 1, 3, 5, 7 }
+local inputs = { [input.pins[1]] = 1, [input.pins[2]] = 1, [input.pins[3]] = 1, [input.pins[4]] = 1 }
 
-local inputs = { [1] = 1, [3] = 1, [5] = 1, [7] = 1 }
 local subscriber = { notify = nil }
 
 function input.initialize()
     for pin, level in pairs(inputs) do
         gpio.mode(pin, gpio.INPUT, level)
-        gpio.trig(pin, 'none')
         detectChanges()
     end
 end
