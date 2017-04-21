@@ -1,6 +1,5 @@
 input = {}
-input.pins = { 1, 3, 5, 7 }
-local inputs = { [input.pins[1]] = 1, [input.pins[2]] = 1, [input.pins[3]] = 1, [input.pins[4]] = 1 }
+local inputs = { [constants.OYO.inputPins[1]] = 1, [constants.OYO.inputPins[2]] = 1, [constants.OYO.inputPins[3]] = 1, [constants.OYO.inputPins[4]] = 1 }
 
 local subscriber = { notify = nil }
 

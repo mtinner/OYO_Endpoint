@@ -1,3 +1,4 @@
+require('constants')
 require('softap')
 require('server')
 require('station')

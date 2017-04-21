@@ -20,7 +20,17 @@ function station.start(self, wifiConfig)
                 srv = net.createServer(net.UDP)
                 srv:on("receive", function(_, _, _, ip)
                     tmr.unregister(1)
-                    socket.connect(ip)
+                    local registerEndpointURL = 'http://' .. ip .. ':' .. 8610 .. '/api/endpoints'
+                    http.post(registerEndpointURL, constants.JsonHeader, cjson.encode(constants.OYO), function(code, data)
+    if (code < 0) then
+      print("HTTP request failed")
+    else
+      print(code, data)
+      print('post sent')
+                        socket.connect(ip)
+    end
+  end)
+
                     srv:close()
                 end)
                 tmr.alarm(1, 120000, tmr.ALARM_SINGLE, function()
