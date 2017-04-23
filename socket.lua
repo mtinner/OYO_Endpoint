@@ -3,6 +3,7 @@ socket.ws = nil
 
 function socket.connect(ip)
     socket.ws = websocket.createClient()
+    socket.ws:config({headers={['X-chipId']=node.chipid()}})
     socket.ws:on("connection", function(ws)
         print('got ws connection')
         tmr.unregister(3)
