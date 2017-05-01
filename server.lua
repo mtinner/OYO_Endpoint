@@ -1,9 +1,8 @@
 server = {}
 
-local filePos = 0;
+local filePos, srv = 0, nil
 
-
-function server.start()
+function server.start(callback)
 
     srv = net.createServer(net.TCP)
     srv:listen(80, function(conn)
@@ -38,9 +37,18 @@ function server.start()
                     print("[Error opening file" .. requestFile .. "]");
                 end
             end
-            print("[Connection closed]");
             conn:close();
-            collectgarbage();
         end)
     end)
+    tmr.alarm(0, 1000, tmr.ALARM_SINGLE, function()
+        helper.setState(constants.states.SERVER_STARTED)
+        callback()
+    end)
+end
+
+function server.close()
+    if srv ~= nil then
+        srv:close()
+        srv = nil
+    end
 end

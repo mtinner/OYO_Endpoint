@@ -1,54 +1,34 @@
 station = {}
 
-function station.start(self, wifiConfig)
-
-    wifi.setmode(wifi.STATION)
-    wifi.sta.config(wifiConfig)
-
-    wifi.sta.connect()
-
-    local cnt = 0
-    tmr.alarm(0, 2000, tmr.ALARM_AUTO, function()
-        if (wifi.sta.getip() == nil) and (cnt < 20) then
-            print("Trying Connect to Router, Waiting...")
-            cnt = cnt + 1
-        else
-            tmr.unregister(0)
-            if (cnt < 20) then
-                print("Config done, IP is " .. wifi.sta.getip())
-                server:start()
-                srv = net.createServer(net.UDP)
-                srv:on("receive", function(_, _, _, ip)
-                    tmr.unregister(1)
-                    local registerEndpointURL = 'http://' .. ip .. ':' .. 8610 .. '/api/endpoints'
-                    http.post(registerEndpointURL, constants.JsonHeader, cjson.encode(constants.OYO), function(code, data)
-    if (code < 0) then
-      print("HTTP request failed")
-    else
-      print(code, data)
-      print('post sent')
-                        socket.connect(ip)
+function station.start(callback)
+    local wifiConfig = helper:getWifiConfig()
+    if wifiConfig == nil then
+        helper.setState(constants.states.MISSING_WIFI_CREDENTIALS)
+        return nil
     end
-  end)
 
-                    srv:close()
-                end)
-                tmr.alarm(1, 120000, tmr.ALARM_SINGLE, function()
-                    print("No broadcast message received within 120s")
-                    srv:close()
-                    startConfigAP()
-                end)
-                srv:listen(1990)
-            else
-                print("Wifi setup time more than 40s.")
-                startConfigAP()
-            end
-            cnt = nil;
+    if (helper.getState() ~= constants.states.RETRY_CONNECTING_WIFI) then
+        wifi.setmode(wifi.STATION)
+        wifi.sta.config(wifiConfig)
+        wifi.sta.connect()
+    end
 
-            collectgarbage();
+    station.checkConnection(callback)
+    return nil
+end
+
+function station.checkConnection(callback)
+    tmr.alarm(0, 5000, tmr.ALARM_SINGLE, function()
+        if (wifi.sta.getip() == nil) then
+            print("Trying Connect to Router, Waiting...")
+            helper.setState(constants.states.WAITING_FOR_WIFI_CONNECTION)
+            callback()
+        else
+            print("Config done, IP is " .. wifi.sta.getip())
+            helper.setState(constants.states.WIFI_CONNECTED)
+            callback()
         end
     end)
-    return nil
 end
 
 function station.saveCredentials(params)

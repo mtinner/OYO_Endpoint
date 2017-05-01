@@ -1,13 +1,12 @@
 socket = {}
 socket.ws = nil
 
-function socket.connect(ip)
+function socket.start(callback)
     socket.ws = websocket.createClient()
-    socket.ws:config({headers={['X-chipId']=node.chipid()}})
+    socket.ws:config({ headers = { ['X-chipId'] = node.chipid() } })
     socket.ws:on("connection", function(ws)
-        print('got ws connection')
-        tmr.unregister(3)
         input.subscribe(socket.send)
+        helper.setState(constants.states.WS_CONNECTION_ESTABLISHED)
     end)
     socket.ws:on("receive", function(_, msg, opcode)
         print('got message:', msg, opcode) -- opcode is 1 for text message, 2 for binary
@@ -15,30 +14,31 @@ function socket.connect(ip)
     socket.ws:on("close", function(_, status)
         print('connection closed', status)
         socket.ws = nil -- required to lua gc the websocket client
-        socket.reconnect(ip)
         input.unsubscribe()
+        helper.setState(constants.states.WS_CONNECTION_CLOSED)
+        callback()
     end)
-    local wsURL = 'ws://' .. ip .. ':1990'
-    print(wsURL)
+    local wsURL = 'ws://' .. IP .. ':1990'
+    helper.setState(constants.states.WAITING_WS_CONNECTION)
     socket.ws:connect(wsURL)
+    socket.checkConnection(callback)
+    return nil
 end
 
-function socket.reconnect(ip)
-    local cnt = 0
-    tmr.alarm(3, 10000, tmr.ALARM_AUTO, function()
-        cnt = cnt + 1
-        print("Try to reconnect to websocket")
-        socket.connect(ip)
-        if cnt > 12 then
-            tmr.unregister(3)
-            print("Could not connect to websocket")
-            startConfigAP()
-        end
+function socket.checkConnection(callback)
+    tmr.alarm(0, 5000, tmr.ALARM_SINGLE, function()
+        callback()
     end)
 end
 
 function socket.send(table)
     if socket and socket.ws then
         socket.ws:send(cjson.encode(table))
+    end
+end
+
+function socket.close()
+    if socket.ws ~= nil then
+        socket.ws = nil
     end
 end

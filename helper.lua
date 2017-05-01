@@ -1,4 +1,7 @@
 helper = {}
+helper.attemptsOnSameState = 0
+local _state = constants.states.CONNECTING_WIFI
+
 
 function helper.getParams(request)
     params = {}
@@ -12,7 +15,7 @@ function helper.getJson(request)
     print(request)
     local jsonString = string.match(request, "{.*}$")
     if not jsonString then
-        jsonString='{}'
+        jsonString = '{}'
     end
     return cjson.decode(jsonString)
 end
@@ -42,4 +45,15 @@ function helper.hasArrayValue(arr, value)
         end
     end
     return false
+end
+
+
+function helper.setState(state)
+    _state = state
+    helper.attemptsOnSameState = 0;
+    print(state)
+end
+
+function helper.getState()
+    return _state
 end
