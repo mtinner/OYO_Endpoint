@@ -9,14 +9,26 @@ require('output')
 require('socket')
 require('introducer')
 
--- TODO add repetition thresholds
 function actionExecuter()
+
+    if constants.RETRY_THRESHOLD <= helper.attemptsOnSameState then
+        helper.setState(constants.states.TIMEOUT)
+        introducer.close()
+        socket.close()
+        server.close()
+        collectgarbage();
+    end
+
     if helper.getState() == constants.states.CONNECTING_WIFI then
         station.start(actionExecuter)
     end
 
     if helper.getState() == constants.states.WAITING_FOR_WIFI_CONNECTION then
         station.checkConnection(actionExecuter)
+    end
+
+    if helper.getState() == constants.states.WAITING_FOR_AP then
+        softap.checkState(actionExecuter)
     end
 
     if helper.getState() == constants.states.WIFI_CONNECTED or
@@ -52,9 +64,11 @@ function actionExecuter()
     if helper.getState() == constants.states.WS_CONNECTION_CLOSED then
         introducer.close()
         socket.close()
+        collectgarbage();
         introducer.start(actionExecuter)
     end
     if helper.getState() == constants.states.INTRODUCTION_FAILED or
+            helper.getState() == constants.states.TIMEOUT or
             helper.getState() == constants.states.MISSING_WIFI_CREDENTIALS then
         softap.start(actionExecuter)
     end

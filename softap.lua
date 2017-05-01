@@ -6,23 +6,31 @@ function softap.start(callback)
     local cfg
 
     cfg = {
-        ip = "192.168.0.1",
+        ip = "192.168.4.1",
         netmask = "255.255.255.0",
-        gateway = "192.168.0.1"
+        gateway = "192.168.4.1"
     }
     wifi.ap.setip(cfg)
-
+    cfg = nil
     cfg = {
-        ssid = "OYO" .. node.chipid()
+        ssid = "OYO" .. node.chipid(),
+        save = false
     }
     wifi.ap.config(cfg)
-
-    print("\r\n********************")
-    print("OYO IP:\r\n", wifi.ap.getip())
     cfg = nil
+    helper.setState(constants.states.WAITING_FOR_AP)
+    softap.checkState(callback)
+end
 
-    tmr.alarm(0, 1000, tmr.ALARM_SINGLE, function()
-        helper.setState(constants.states.AP_STARTED)
+-- todo check
+function softap.checkState(callback)
+    tmr.alarm(0, 2000, tmr.ALARM_SINGLE, function()
+        if wifi.ap.getip() then
+
+            print("\r\n********************")
+            print("OYO IP:\r\n", wifi.ap.getip())
+            helper.setState(constants.states.AP_STARTED)
+        end
         callback()
     end)
 end
