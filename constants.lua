@@ -21,4 +21,4 @@ constants.states = {
     WS_CONNECTION_CLOSED = 91,
     TIMEOUT = 92,
 }
-constants.RETRY_THRESHOLD = 3
+constants.RETRY_THRESHOLD = 12
