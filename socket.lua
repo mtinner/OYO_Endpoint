@@ -3,7 +3,7 @@ socket.ws = nil
 
 function socket.start(callback)
     socket.ws = websocket.createClient()
-    socket.ws:config({ headers = { ['X-chipId'] = node.chipid() } })
+    socket.ws:config({ headers = { ['Chip-Id'] = node.chipid() } })
     socket.ws:on("connection", function(ws)
         input.subscribe(socket.send)
         helper.setState(constants.states.WS_CONNECTION_ESTABLISHED)
