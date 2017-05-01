@@ -12,7 +12,6 @@ function socket.start(callback)
         print('got message:', msg, opcode) -- opcode is 1 for text message, 2 for binary
     end)
     socket.ws:on("close", function(_, status)
-        print('connection closed', status)
         socket.ws = nil -- required to lua gc the websocket client
         input.unsubscribe()
         helper.setState(constants.states.WS_CONNECTION_CLOSED)

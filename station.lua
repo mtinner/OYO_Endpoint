@@ -3,7 +3,10 @@ station = {}
 function station.start(callback)
     local wifiConfig = helper:getWifiConfig()
     if wifiConfig == nil then
-        helper.setState(constants.states.MISSING_WIFI_CREDENTIALS)
+        tmr.alarm(0, 500, tmr.ALARM_SINGLE, function()
+            helper.setState(constants.states.MISSING_WIFI_CREDENTIALS)
+            callback()
+        end)
         return nil
     end
 
@@ -20,11 +23,9 @@ end
 function station.checkConnection(callback)
     tmr.alarm(0, 5000, tmr.ALARM_SINGLE, function()
         if (wifi.sta.getip() == nil) then
-            print("Trying Connect to Router, Waiting...")
             helper.setState(constants.states.WAITING_FOR_WIFI_CONNECTION)
             callback()
         else
-            print("Config done, IP is " .. wifi.sta.getip())
             helper.setState(constants.states.WIFI_CONNECTED)
             callback()
         end

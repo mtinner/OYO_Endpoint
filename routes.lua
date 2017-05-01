@@ -11,7 +11,6 @@ function routes.manage(_, conn, method, route, params, body)
                 sendFile(conn)
             end
         elseif route == '/output' then
-            print(route)
             if body.value and body.pin then
                 output.setOutput(body.pin, body.value, body.toggle)
                 sendJson(conn)
@@ -26,7 +25,6 @@ end
 
 function sendFile(conn)
     requestFile = 'index.html';
-    print("[Sending file " .. requestFile .. "]");
     conn:send("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n");
 end
 

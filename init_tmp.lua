@@ -8,28 +8,6 @@ require('input')
 require('output')
 require('socket')
 require('introducer')
---[[
-function startStation(wifiConfig)
-    station:start(wifiConfig)
-end
-
-function startConfigAP()
-    softap:start()
-    server:start()
-end
-
-
-
-input:initialize()
-output:initialize()
-
-if wifiConfig then
-    local config = wifiConfig
-    startStation(config)
-else
-    startConfigAP()
-end
-]]
 
 -- TODO add repetition thresholds
 function actionExecuter()
@@ -41,10 +19,8 @@ function actionExecuter()
         station.checkConnection(actionExecuter)
     end
 
-    if helper.getState() == constants.states.MISSING_WIFI_CREDENTIALS then
-    end
-
-    if helper.getState() == constants.states.WIFI_CONNECTED then
+    if helper.getState() == constants.states.WIFI_CONNECTED or
+            helper.getState() == constants.states.AP_STARTED then
         server.start(actionExecuter)
     end
 
@@ -52,6 +28,8 @@ function actionExecuter()
         -- TODO check if AP mode active, if so this is an end state
         if wifi.ap.getip() == nil then
             introducer.start(actionExecuter)
+        else
+            print('SERVER_STARTED')
         end
     end
 
@@ -68,7 +46,7 @@ function actionExecuter()
     end
 
     if helper.getState() == constants.states.WS_CONNECTION_ESTABLISHED then
-        -- endstate
+        print('WS_CONNECTION_ESTABLISHED')
     end
 
     if helper.getState() == constants.states.WS_CONNECTION_CLOSED then
@@ -76,8 +54,11 @@ function actionExecuter()
         socket.close()
         introducer.start(actionExecuter)
     end
-    if helper.getState() == constants.states.START_AP then
+    if helper.getState() == constants.states.INTRODUCTION_FAILED or
+            helper.getState() == constants.states.MISSING_WIFI_CREDENTIALS then
+        softap.start(actionExecuter)
     end
+
     helper.attemptsOnSameState = helper.attemptsOnSameState + 1
     collectgarbage();
 end

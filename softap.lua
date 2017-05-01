@@ -1,6 +1,6 @@
 softap = {}
 
-function softap.start()
+function softap.start(callback)
     wifi.setmode(wifi.SOFTAP)
 
     local cfg
@@ -20,4 +20,9 @@ function softap.start()
     print("\r\n********************")
     print("OYO IP:\r\n", wifi.ap.getip())
     cfg = nil
+
+    tmr.alarm(0, 1000, tmr.ALARM_SINGLE, function()
+        helper.setState(constants.states.AP_STARTED)
+        callback()
+    end)
 end

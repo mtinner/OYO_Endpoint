@@ -12,7 +12,6 @@ function helper.getParams(request)
 end
 
 function helper.getJson(request)
-    print(request)
     local jsonString = string.match(request, "{.*}$")
     if not jsonString then
         jsonString = '{}'

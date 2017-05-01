@@ -27,7 +27,6 @@ function server.start(callback)
                     file.close();
                     if partial_data then
                         filePos = filePos + #partial_data;
-                        print("[" .. filePos .. " bytes sent]");
                         conn:send(partial_data);
                         if (string.len(partial_data) == 512) then
                             return;

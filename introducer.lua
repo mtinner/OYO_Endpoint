@@ -6,13 +6,10 @@ function introducer.start(callback)
     srv = net.createServer(net.UDP)
     srv:on("receive", function(_, _, _, ip)
         local registerEndpointURL = 'http://' .. ip .. ':' .. 8610 .. '/api/endpoints'
-        print(registerEndpointURL)
         http.post(registerEndpointURL, constants.JsonHeader, cjson.encode(constants.OYO), function(code, data)
             if (code < 0) then
-                print("HTTP request failed")
-                newState = constants.states.START_AP
+                newState = constants.states.INTRODUCTION_FAILED
             else
-                print(code, data)
                 IP = ip
                 newState = constants.states.INTRODUCED
             end
