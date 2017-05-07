@@ -4,6 +4,10 @@ constants.OYO = {
     inputPins = { 1, 3, 5, 7 },
     outputPins = { 0, 2, 6, 8 }
 }
+constants.events = {
+    INITIAL = 'INITIAL',
+    CHANGE = 'CHANGE'
+}
 constants.JsonHeader = 'Content-Type: application/json\r\n'
 constants.states = {
     CONNECTING_WIFI = 0,

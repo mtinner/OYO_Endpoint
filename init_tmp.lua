@@ -9,6 +9,9 @@ require('output')
 require('socket')
 require('introducer')
 
+input:initialize()
+output:initialize()
+
 function actionExecuter()
 
     if constants.RETRY_THRESHOLD <= helper.attemptsOnSameState then

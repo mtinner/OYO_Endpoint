@@ -16,7 +16,7 @@ function detectChanges()
             if inputs[pin] ~= gpio.read(pin) then
                 inputs[pin] = gpio.read(pin)
                 if subscriber.notify then
-                    subscriber.notify({ pin = pin, level = level })
+                    subscriber.notify({ event = constants.events.CHANGE, pin = pin, level = level })
                 end
             end
         end
@@ -29,4 +29,12 @@ end
 
 function input.unsubscribe()
     subscriber.notify = nil
+end
+
+function input.getState()
+    local state = {}
+    for pin, level in pairs(inputs) do
+        table.insert(state, { level = gpio.read(pin), pin = pin })
+    end
+    return { event = constants.events.INITIAL, inputs = state }
 end
