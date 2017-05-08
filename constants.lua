@@ -1,8 +1,12 @@
 constants = {}
 constants.OYO = {
     chipId = node.chipid(),
-    inputPins = { 1, 3, 5, 7 },
-    outputPins = { 0, 2, 6, 8 }
+    ios = {
+        { inputPin = 0, outputPin = 5 },
+        { inputPin = 1, outputPin = 6 },
+        { inputPin = 2, outputPin = 7 },
+        { inputPin = 3, outputPin = 8 }
+    }
 }
 constants.events = {
     INITIAL = 'INITIAL',

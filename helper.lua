@@ -37,9 +37,9 @@ function helper.getWifiConfig()
     return nil
 end
 
-function helper.hasArrayValue(arr, value)
+function helper.hasArrayObjectValue(arr,attribute, value)
     for i, v in ipairs(arr) do
-        if v == value then
+        if v[attribute] == value then
             return true
         end
     end
