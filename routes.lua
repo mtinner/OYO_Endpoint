@@ -11,8 +11,8 @@ function routes.manage(_, conn, method, route, params, body)
                 sendFile(conn)
             end
         elseif route == '/output' then
-            if body.value and body.pin then
-                output.setOutput(body.pin, body.value, body.toggle)
+            if body.value and body.outputPin then
+                output.setOutput(body.outputPin, body.value, body.toggle)
                 sendJson(conn)
             end
         end
