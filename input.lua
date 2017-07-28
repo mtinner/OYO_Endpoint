@@ -17,7 +17,7 @@ function detectChanges()
             if inputs[pin] ~= gpio.read(pin) then
                 inputs[pin] = gpio.read(pin)
                 if subscriber.notify then
-                    subscriber.notify({ event = constants.events.CHANGE, inputPin = pin, inputLevel = gpio.read(pin) })
+                    subscriber.notify({ event = constants.events.INPUT_CHANGE, inputPin = pin, inputLevel = gpio.read(pin) })
                 end
             end
         end

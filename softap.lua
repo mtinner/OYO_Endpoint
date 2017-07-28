@@ -29,6 +29,7 @@ function softap.checkState(callback)
 
             print("\r\n********************")
             print("OYO IP:\r\n", wifi.ap.getip())
+            print("OYO" .. node.chipid())
             helper.setState(constants.states.AP_STARTED)
         end
         callback()

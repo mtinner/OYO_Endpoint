@@ -10,7 +10,8 @@ constants.OYO = {
 }
 constants.events = {
     INITIAL = 'INITIAL',
-    CHANGE = 'CHANGE'
+    INPUT_CHANGE = 'INPUT_CHANGE',
+    OUTPUT_CHANGE = 'OUTPUT_CHANGE'
 }
 constants.JsonHeader = 'Content-Type: application/json\r\n'
 constants.states = {
