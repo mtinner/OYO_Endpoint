@@ -12,8 +12,7 @@ function routes.manage(_, conn, method, route, params, body)
             end
         elseif route == '/output' then
             if body.value and body.outputPin then
-                output.setOutput(body.outputPin, body.value, body.toggle)
-                sendJson(conn)
+                sendJson(conn, body.outputPin, body.value, body.toggle)
             end
         end
     else
@@ -28,7 +27,9 @@ function sendFile(conn)
     conn:send("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n");
 end
 
-function sendJson(conn)
-    conn:send("HTTP/1.1 204 No Content\r\nContent-Type: application/json\r\n\r\n");
+function sendJson(conn, outputPin, value, toggle)
+    conn:send("HTTP/1.1 204 No Content\r\nContent-Type: application/json\r\n\r\n", function()
+        output.setOutput(outputPin, value, toggle)
+    end);
 end
 

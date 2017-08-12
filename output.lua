@@ -18,7 +18,7 @@ function output.setOutput(pin, value, toggle)
                 subscriber.notify({ event = constants.events.OUTPUT_CHANGE, outputPin = pin, outputLevel = value, inputPin = findInputPin(pin) })
             else
                 gpio.write(pin, value)
-                subscriber.notify({ event = constants.events.OUTPUT_CHANGE, outputPin = pin, outputLevel = gpio.read(pin), inputPin = findInputPin(pin) })
+                subscriber.notify({ event = constants.events.OUTPUT_CHANGE, outputPin = pin, outputLevel = value, inputPin = findInputPin(pin) })
             end
         end
     end
